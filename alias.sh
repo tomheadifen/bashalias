@@ -1,15 +1,20 @@
 # custom commands
 
-alias cdapp='cd ~/Code/app/'
-# get the logs for the latest cli file, handy when writing tests
-alias taillogs='cd ~/Code/app/storage/logs && tail -f -n 70  "`ls | grep cli | tail -n 1`" | grep -A50 "ERROR"'
+alias sail='[ -f sail ] && bash sail || bash vendor/bin/sail'
 
-# clean curent branch
-alias nah='git reset --hard && git clean -fd'
+alias ls='ls -G'
+alias ll='ls -lG'
+alias cdweb="cd ~/Code/"
+alias cdrepo="cdweb; cd WhoPlusYou-Html5/"
+alias cdlogs="cdrepo; cd storage/logs/"
 
-# custom functions
-
-# get the history with a filter but dont show repeated duplicates or run number
-h() {
-    history | grep -i "$1" | sed 's/.[ ]*.[0-9]*.[ ]*//' | uniq
+##color tail -f to highlight queries and errors
+colortailf() {
+        tail -f $1 | awk '
+         /INSERT/ || /POST/ || /SELECT/ || /DELETE/ {print "\033[32m" $0 "\033[39m"}
+         /ERROR/ {print "\033[31m" $0 "\033[39m"}
+        '
 }
+alias ctail=colortailf
+
+alias taillogs='cd ~/Code/WhoPlusYou-Html5/app/storage/logs && tail -f -n 70  "`ls | grep cli | tail -n 1`" | grep -A50 "ERROR"'
